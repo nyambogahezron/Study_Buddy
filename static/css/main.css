@@ -1,33 +1,86 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600$display=swap');
 
 :root {
+  /* colors  */
+  --color-white: #ffffff;
+  --color-gray: #9e98b3;
+  --color-light: #f0eef6;
+  --bg-color: #f0eef6;
+  --color-primary: #6b4ce6;
+  --color-secondary: #d6ccff;
+  --color-success: #51fb51;
+  --color-danger: #fb5151;
+  --color-dark: #241e38;
+  --color-black: #151221;
   --color-main: #71c6dd;
+  --theme-color: #71c6dd;
   --color-main-light: #e1f6fb;
-  --color-dark: #3f4156;
   --color-dark-medium: #51546e;
   --color-dark-light: #696d97;
-  --color-light: #e5e5e5;
-  --color-gray: #8b8b8b;
   --color-light-gray: #b2bdbd;
-  --color-bg: #353557;
+  --color-bg-dark: #2d2d39;
   --color-success: #5dd693;
-  --color-error: #fc4b0b;
+
+  --border-radius: 2rem;
+  --card-border-radius: 1rem;
+  --btn-padding: 0.6rem 2rem;
+  --search-padding: 0.6rem 1rem;
+  --card-padding: 1rem;
 }
-
-/*========== base styles ==========*/
-
-* {
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  margin: 0;
+:root.dark {
+  --color-white: #333;
+  --color-light: #282525;
+  --color-dark: #f3f3f3;
+  --bg-color: #282525;
+  --color-dark-medium: #d2d4e2;
+  --color-dark-light: #d2d4e2;
+  --color-bg-dark: #f2f2f2;
+}
+:root.dim {
+  --color-white: #19191b;
+  --color-light: #23272f;
+  --color-dark: #f3f3f3;
+  --bg-color: #1b1e24;
+  --color-black: #f2f2f2;
+  --color-bg-dark: #fff;
+  --color-dark-light: #b0b1bf;
+  --color-dark-medium: #d2d4e2;
+}
+:root.color-1 {
+  --theme-color: #71c6dd;
+}
+:root.color-2 {
+  --theme-color: #9d9d50;
+}
+:root.color-3 {
+  --theme-color: #6551a2;
+}
+:root.color-4 {
+  --theme-color: #4dbc88;
+}
+:root.color-5 {
+  --theme-color: #558db4;
+}
+/* GLOBAL CSS  */
+*,
+*::after,
+*::before {
   padding: 0;
+  margin: 0;
+  outline: 0;
   box-sizing: border-box;
+  text-decoration: none;
+  list-style: none;
+  border: none;
   text-rendering: optimizeLegibility;
   font-size: inherit;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 html {
   font-size: 56.25%;
+  scroll-behavior: smooth;
 }
 
 @media only screen and (min-width: 1200px) {
@@ -47,8 +100,24 @@ body {
   font-weight: 400;
   font-size: 1.5rem;
   color: var(--color-light-gray);
-  background-color: var(--color-bg);
+  background-color: var(--bg-color);
   min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-black);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.5s ease-out;
+}
+body.show::before {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 img {
@@ -57,11 +126,10 @@ img {
 
 a {
   display: inline-block;
-  color: var(--color-main);
+  color: #71c6dd;
   text-decoration: none;
 }
 
-/*========== components ==========*/
 .container {
   max-width: 120rem;
   width: 90%;
@@ -107,7 +175,7 @@ a {
   color: var(--color-light);
 }
 
-.btn > svg, .icon {
+.btn > svg {
   fill: currentColor;
   width: 1.6rem;
   height: 1.6rem;
@@ -148,10 +216,11 @@ a {
   content: '';
   display: block;
   position: absolute;
+  left: 22px;
   background-color: var(--color-gray);
   z-index: 111;
   border-radius: 50%;
-  border: 0.3rem solid var(--color-dark);
+  border: 0.3rem solid var(--color-success);
 }
 
 .avatar.active::after {
@@ -180,7 +249,7 @@ a {
   width: 0.7rem;
   height: 0.7rem;
   bottom: 0px;
-  right: -6px;
+  right: -5px;
 }
 
 .avatar.avatar--large img {
@@ -196,7 +265,12 @@ a {
   bottom: 2px;
   right: 3.5px;
 }
-
+.avatar.avatar--medium:after {
+  width: 0.7rem;
+  height: 0.7rem;
+  bottom: -1px;
+  right: -5px;
+}
 .scroll::-webkit-scrollbar {
   width: 0.6rem;
   background-color: rgb(41, 41, 46);
@@ -253,12 +327,9 @@ a {
   justify-content: center;
   gap: 1rem;
 }
-.mobile-menu form {
-  display: none;
-}
 
-@media screen and (min-width: 900px) {
-  .mobile-menuItems {
+@media screen and (min-width: 500px) {
+  .mobile-menu {
     display: none;
   }
 }
@@ -269,11 +340,11 @@ a {
 
 .header {
   padding: 1.5rem;
-  background-color: var(--color-dark);
+  background-color: var(--color-white);
   position: fixed;
-  width: 100%;
   top: 0;
   z-index: 999;
+  width: 100%;
 }
 
 .header > .container {
@@ -296,18 +367,24 @@ a {
 .header__logo > h1 {
   font-weight: 700;
   font-size: 2rem;
-  color: var(--color-light);
+  color: var(--color-dark-medium);
 }
 
 .header__search > label {
-  background-color: var(--color-dark-medium);
+  background-color: var(--bg-color);
   padding: 1.3rem 1rem;
+  width: 600px;
   display: flex;
   align-items: center;
   gap: 1rem;
   border-radius: 4px;
 }
 
+@media screen and (max-width: 500px) {
+  .header__search > label {
+    background-color: var(--color-main);
+  }
+}
 .header__search svg {
   fill: var(--color-gray);
   width: 2rem;
@@ -320,7 +397,12 @@ a {
   background: transparent;
   border: none;
   outline: none;
-  color: var(--color-light);
+  color: var(--color-dark);
+  font-weight: 600;
+}
+
+.header__search input:focus {
+  color: var(--color-dark);
 }
 
 @media screen and (max-width: 800px) {
@@ -330,6 +412,10 @@ a {
 
   .header > .container {
     gap: 3rem;
+  }
+
+  .header__search > label {
+    width: 100%;
   }
 }
 
@@ -388,15 +474,23 @@ a {
 }
 
 .dropdown-button:hover svg {
-  fill: var(--color-main);
+  fill: var(--color-dark);
 }
+
+/* main css  */
 
 /*==============================
 =>  Layout
 ================================*/
 
 .layout {
-  margin-top: 2.4rem;
+  position: relative;
+  margin-top: 9.2rem;
+}
+
+.home.layout {
+  position: relative;
+  margin-top: 10rem;
 }
 
 .layout > .container {
@@ -406,16 +500,36 @@ a {
 }
 
 .layout--3 > .container > div:first-child {
-  flex-basis: 18%;
+  position: fixed;
+  width: 100%;
+  flex-basis: 20%;
   max-width: 22.5rem;
+  padding: 0 5px 0 5px;
 }
 
 .layout--3 > .container > div:nth-child(2) {
   flex-basis: 50%;
+  margin-left: 26.5rem;
 }
 
 .layout--3 > .container > div:last-child {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  width: 25%;
   flex-basis: 25%;
+  right: 4rem;
+  overflow-y: auto;
+  height: 57rem;
+}
+
+@media screen and (max-width: 1100px) {
+  .layout--3 > .container > div:last-child {
+    right: 1.5rem;
+  }
+  .layout--3 > .container > div:nth-child(2) {
+    flex-basis: 47%;
+  }
 }
 
 .layout--2 > .container > div:first-child {
@@ -425,9 +539,11 @@ a {
 .layout--2 > .container > div:last-child {
   flex-basis: 25%;
 }
+
 /*========== Layout Box ==========*/
 
 .layout__box {
+  margin-top: 5rem;
   width: 90%;
   max-width: 48rem;
   min-height: 40rem;
@@ -435,19 +551,22 @@ a {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -46%);
-  background-color: var(--color-dark);
+  background-color: var(--color-white);
   border-radius: 1rem;
   box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
-.register .layout__box {
-  margin-top: 120px;
-}
 
 .layout__boxHeader {
+  align-items: center;
   display: flex;
   padding: 1.5rem;
-  background-color: var(--color-dark-light);
+  background-color: var(--color-main);
+}
+
+.layout__boxHeader a svg {
+  fill: var(--color-dark);
+  margin-top: 7px;
 }
 
 .layout__boxTitle {
@@ -477,9 +596,14 @@ a {
   .topics {
     display: none;
   }
+  .layout--3 > .container > div:last-child {
+    display: none;
+  }
 
   .layout--3 > .container > div:nth-child(2) {
     flex-basis: 100%;
+    width: 100%;
+    margin-left: 0;
   }
 }
 
@@ -501,6 +625,8 @@ a {
   display: block;
   font-size: 1.5rem;
   margin-bottom: 1rem;
+  color: var(--color-bg-dark);
+  font-weight: 600;
 }
 
 .form__group input,
@@ -519,6 +645,7 @@ a {
 .form__group input:focus,
 .form__group textarea:focus {
   border-color: var(--color-main);
+  color: var(--color-bg-dark);
 }
 
 .form__group textarea {
@@ -567,13 +694,12 @@ a {
 
 .topics__header {
   margin-bottom: 2rem;
-  margin-top: 80px;
 }
 
 .topics__header h2 {
   text-transform: uppercase;
-  font-weight: 500;
-  color: var(--color-dark-light);
+  font-weight: 700;
+  color: var(--color-dark);
 }
 
 .topics__list {
@@ -583,24 +709,29 @@ a {
 .topics__list li a {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 3rem;
-  font-weight: 500;
-  color: var(--color-light-gray);
+  margin-bottom: 2.2rem;
+  font-weight: 600;
+  color: var(--color-dark-medium);
   transition: all 0.3s ease-in-out;
 }
 
-.topics__list li a.active,
+.topics__list li a.active span {
+  background: var(--color-dark);
+  color: var(--color-white);
+}
+
 .topics__list li a:hover {
-  color: var(--color-main);
+  margin-left: 10px;
 }
 
 .topics__list li a span {
-  padding: 0.5rem 1rem;
-  background-color: var(--color-dark);
-  border-radius: 3px;
+  padding: 0.5rem 0.8rem;
+  background-color: var(--color-main);
+  border-radius: 4px;
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 1px;
+  color: var(--color-white);
 }
 
 .topics-page a:hover {
@@ -618,6 +749,13 @@ a {
   display: block;
 }
 
+.auth .btn--main {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 5px;
+}
+
 @media screen and (max-width: 500px) {
   .mobile-menu .header__search {
     display: block;
@@ -628,9 +766,7 @@ a {
 /*==============================
 =>  Room List
 ================================*/
-.roomList {
-  margin-top: 70px;
-}
+
 .roomList__header {
   display: flex;
   justify-content: space-between;
@@ -640,8 +776,8 @@ a {
 
 .roomList__header h2 {
   text-transform: uppercase;
-  font-weight: 500;
-  color: var(--color-light);
+  font-weight: 700;
+  color: var(--color-dark-light);
   letter-spacing: 1px;
 }
 
@@ -654,7 +790,7 @@ a {
 
 .roomListRoom {
   margin-bottom: 2.4rem;
-  background-color: var(--color-dark);
+  background-color: var(--color-white);
   border-radius: 1rem;
   padding: 2rem;
 }
@@ -666,7 +802,7 @@ a {
 }
 
 .roomListRoom__author {
-  font-weight: 500;
+  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -680,13 +816,13 @@ a {
 }
 
 .roomListRoom__actions span {
+  color: var(--color-gray);
   font-size: 1.4rem;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .roomListRoom__actions svg {
   fill: var(--color-main);
-
   width: 1.6rem;
   height: 1.6rem;
 }
@@ -696,17 +832,22 @@ a {
 }
 
 .roomListRoom__content a {
-  font-size: 2rem;
-  font-weight: 500;
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
   margin-bottom: 1.5rem;
-  color: var(--color-light);
+  color: var(--color-main);
+
   transition: all 0.3s ease-in-out;
 }
 
 .roomListRoom__content a:hover {
-  color: var(--color-main);
+  color: var(--color-black);
 }
-
+.roomListRoom__content p {
+  color: var(--color-light-gray);
+  font-weight: 600;
+}
 .roomListRoom__meta {
   border-top: 1px solid var(--color-dark-medium);
   padding-top: 1rem;
@@ -732,7 +873,8 @@ a {
 
 .roomListRoom__topic {
   padding: 5px 1.5rem;
-  background-color: var(--color-dark-medium);
+  background-color: var(--color-main);
+  color: var(--color-dark);
   border-radius: 5rem;
   font-weight: 500;
   font-size: 1.3rem;
@@ -743,16 +885,17 @@ a {
 ================================*/
 
 .activities {
-  background: var(--color-dark);
+  background: var(--color-white);
   border-radius: 5px;
   overflow: hidden;
-  margin-top: 70px;
 }
 
 .activities__header h2 {
-  background-color: var(--color-dark-light);
+  display: flex;
+  justify-content: center;
+  background-color: var(--color-main);
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 600;
   padding: 1rem 1.5rem;
   color: var(--color-light);
   letter-spacing: 1px;
@@ -762,27 +905,27 @@ a {
 .activities__box {
   margin: 1.5rem;
   padding: 1.5rem;
-  border: 2px solid var(--color-dark-medium);
+  border: 2px solid var(--color-gray);
   border-radius: 5px;
 }
 
 .activities__boxHeader p {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   line-height: 1.3;
 }
 
 .activities__boxHeader p span {
   color: var(--color-gray);
-  font-size: 1.2rem;
+  font-size: 1rem;
   display: block;
 }
 
 .activities__boxContent {
-  margin-left: 4.2rem;
+  margin-left: 4rem;
 }
 
 .activities__boxContent {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
 }
 
 .activities__boxContent a:hover {
@@ -790,10 +933,12 @@ a {
 }
 
 .activities__boxRoomContent {
-  background: var(--color-bg);
+  text-wrap: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   padding: 1rem;
   border-radius: 5px;
-  margin-top: 1rem;
+  margin-top: 0.7rem;
   margin-left: -4.2rem;
 }
 
@@ -804,6 +949,9 @@ a {
 /*==============================
 =>  Create Room
 ================================*/
+.create-room.layout {
+  margin-top: 35rem;
+}
 
 .create-room.layout .layout__box {
   max-width: 68rem;
@@ -812,7 +960,9 @@ a {
 /*==============================
 =>  Update Account
 ================================*/
-
+.update-account.layout {
+  margin-top: 38rem;
+}
 .update-account.layout .layout__box {
   max-width: 68rem;
 }
@@ -820,21 +970,40 @@ a {
 /*==============================
 =>  Delete Item
 ================================*/
-
+.delete-item.layout {
+  margin-top: 20rem;
+}
 .delete-item.layout .layout__box {
   max-width: 68rem;
+  min-height: 2rem;
+}
+
+.delete-item.layout .layout__box .delete-action {
+  display: flex;
+  column-gap: 10px;
+  align-items: center;
+  float: right;
+  margin-bottom: 1.5rem;
+}
+
+.delete-item.layout .btn.btn--main {
+  background: var(--color-danger);
+  color: var(--color-white);
 }
 
 /*==============================
 =>  Auth
 ================================*/
-
+.sign-in.auth.layout {
+  margin-top: 35rem;
+}
 .auth__tagline {
   text-align: center;
   margin-bottom: 3rem;
   color: var(--color-main);
   font-weight: 500;
   font-size: 1.8rem;
+  text-transform: capitalize;
 }
 .auth .layout__boxHeader {
   text-align: center;
@@ -849,7 +1018,10 @@ a {
 /*==============================
 =>  Settings
 ================================*/
-
+.settings-page.layout input {
+  color: var(--color-dark-medium);
+  font-weight: 500;
+}
 .settings__avatar {
   margin-bottom: 3rem;
   text-align: center;
@@ -857,20 +1029,28 @@ a {
   display: flex;
   justify-content: center;
 }
-
 .settings__avatar .avatar {
   margin: 1rem;
+}
+.settings__avatar .avatar::after {
+  display: none;
 }
 
 /*==============================
 =>  Profile
 ================================*/
+.profile-page.layout {
+  margin-top: 10rem;
+}
 .profile {
-  margin-bottom: 3rem;
+  margin-bottom: 2.3rem;
 }
 
 .profile__avatar {
   text-align: center;
+}
+.profile__avatar .avatar::after {
+  display: none;
 }
 
 .profile__info {
@@ -878,9 +1058,9 @@ a {
 }
 
 .profile__info h3 {
-  font-size: 2rem;
-  color: var(--color-light);
-  font-weight: 400;
+  font-size: 1.5rem;
+  color: var(--color-dark);
+  font-weight: 600;
 }
 
 .profile__info p {
@@ -895,8 +1075,12 @@ a {
 
 .profile__about h3 {
   text-transform: uppercase;
-  color: var(--color-dark-light);
+  color: var(--color-dark);
   margin-bottom: 0.5rem;
+}
+.profile__about p {
+  color: var(--color-dark-light);
+  font-weight: 600;
 }
 
 .profile-page .roomList__header {
@@ -911,10 +1095,18 @@ a {
 =>  Room
 ================================*/
 
+.profile-page.layout.layout--2 {
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  margin-top: 0;
+  padding-top: 1rem;
+}
+
 .room,
 .participants {
-  background: var(--color-dark);
-  max-height: 87.5vh;
+  background: var(--color-white);
+  max-height: 95.5vh;
   border-radius: 0.7rem;
   overflow: hidden;
   position: relative;
@@ -932,7 +1124,7 @@ a {
 
 .room__top,
 .participants__top {
-  background: var(--color-dark-light);
+  background: var(--color-main);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -973,7 +1165,7 @@ a {
 }
 
 .room__topRight svg {
-  fill: var(--color-main-light);
+  fill: var(--color-dark);
 }
 
 .room__header {
@@ -981,7 +1173,7 @@ a {
   overflow-y: auto;
   position: absolute;
   width: 95%;
-  background: var(--color-dark);
+  background: var(--color-white);
   z-index: 999;
   top: 4.4rem;
   padding-top: 2rem;
@@ -996,10 +1188,9 @@ a {
 }
 
 .room__box {
-  padding-left: 2rem;
-  padding-right: 2rem;
-  height: 80.5vh;
-  /* overflow-y: auto; */
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  height: 95.5vh;
   padding-bottom: 0;
 }
 
@@ -1007,7 +1198,7 @@ a {
   .room__box {
     padding-left: 2.5rem;
     padding-right: 2rem;
-    height: 80.5vh;
+    height: 890.5vh;
     overflow-y: auto;
     padding-bottom: 0;
   }
@@ -1055,9 +1246,10 @@ a {
 }
 
 .room__conversation {
-  margin-top: 1rem;
-  margin-bottom: 4rem;
-  height: 64%;
+  position: relative;
+  top: 0rem;
+  margin-bottom: 1rem;
+  height: 100%;
 }
 
 .threads h3 {
@@ -1071,7 +1263,6 @@ a {
   border-radius: 0.7rem;
   overflow-y: auto;
   height: 100%;
-  margin-top: 28vh;
   padding: 0 2rem 4rem 2rem;
 }
 
@@ -1080,6 +1271,9 @@ a {
   padding-left: 1rem;
   margin: 2rem 0;
   padding: 2rem;
+}
+.thread:last-child {
+  margin-bottom: 40px;
 }
 
 .thread__top {
@@ -1111,7 +1305,6 @@ a {
 }
 
 .room__message {
-  padding: 2rem;
   position: absolute;
   z-index: 111;
   bottom: 0;
@@ -1119,27 +1312,56 @@ a {
   right: 0;
   background: transparent;
 }
-
+.room__message > form {
+  position: relative;
+}
 .room__message > form > input {
   resize: none;
-  background-color: var(--color-dark-light);
-  color: var(--color-light);
+  background-color: #51747d;
+  color: var(--color-white);
   border: none;
   outline: none;
-  border-radius: 0.7rem;
-  height: 4.5rem;
   width: 100%;
-  margin-top: -1rem;
+  border-bottom-left-radius: 0.7rem;
+  border-bottom-right-radius: 0.7rem;
+  height: 4.5rem;
+  width: 85%;
   padding: 1.2rem;
   font-size: 1.4rem;
+  margin-left: 40px;
   font-weight: 500;
   position: relative;
 }
-
+.room__message > form {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.room__message > form .submit {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 99;
+  height: 100%;
+  padding: 5px;
+  margin-right: 35px;
+  background-color: var(--color-main);
+}
+.room__message > form .btn {
+  border: none;
+}
 .room__message > form > input::placeholder {
-  color: var(--color-light-gray);
+  color: var(--color-dark);
 }
 
+.room__message .submit svg {
+  height: 28px;
+  width: 28px;
+  fill: var(--color-white);
+  background-color: transparent;
+}
 .participants__top span {
   color: var(--color-main);
   font-size: 1.3rem;
@@ -1175,4 +1397,145 @@ a {
   font-weight: 500;
   color: var(--color-main);
   font-weight: 1.4rem;
+}
+
+/*==============================
+=>  Theme
+================================*/
+
+.customize-theme {
+  display: flex;
+  width: 100vw;
+  max-width: 1200px;
+  height: 100vh;
+  position: relative;
+  text-align: center;
+  justify-content: center;
+  place-items: center;
+  font-size: 1.5rem;
+}
+.customize-theme .card {
+  background: var(--color-white);
+  padding: 3rem;
+  border-radius: var(--card-border-radius);
+  max-width: 600px;
+  width: 100%;
+}
+
+@media screen and (max-width: 635px) {
+  .customize-theme .choose-bg {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
+@media screen and (max-width: 310px) {
+  .customize-theme .card {
+    max-width: 400px;
+    width: 90%;
+  }
+}
+.customize-theme .choose-color {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-light);
+  padding: var(--search-padding);
+  border-radius: var(--card-border-radius);
+}
+
+.customize-theme .choose-size span.active {
+  background: var(--color-primary);
+}
+
+.customize-theme .color,
+.customize-theme .background {
+  margin-top: 3rem;
+}
+
+.customize-theme .color h4,
+.customize-theme .background h4 {
+  margin-bottom: 1.4rem;
+  color: var(--color-dark-light);
+}
+
+.customize-theme .choose-color span {
+  width: 2.2rem;
+  height: 2.2rem;
+  background: var(--color-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.customize-theme .choose-color span:nth-child(1) {
+  background: #71c6dd;
+}
+.customize-theme .choose-color span:nth-child(2) {
+  background: #e6d14c;
+}
+.customize-theme .choose-color span:nth-child(3) {
+  background: #734ce6;
+}
+.customize-theme .choose-color span:nth-child(4) {
+  background: #4ce69e;
+}
+.customize-theme .choose-color span:nth-child(5) {
+  background: #4ca6e6;
+}
+
+.customize-theme .choose-color span.active {
+  border: 5px solid #fff;
+}
+
+/* BACKGROUND  */
+
+.customize-theme .choose-bg {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.customize-theme .choose-bg > div {
+  display: flex;
+  width: 100%;
+  font-size: 1rem;
+  align-items: center;
+  background: var(--color-light);
+  padding: var(--search-padding);
+  border-radius: 0.4rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+.background .choose-bg > div.active {
+  border: 3px solid var(--color-primary);
+}
+.customize-theme .choose-bg .bg-1 {
+  background: #fff;
+  color: #333;
+}
+.customize-theme .choose-bg .bg-2 {
+  background: #151221;
+  color: #fff;
+}
+.customize-theme .choose-bg .bg-3 {
+  background: rgb(2, 2, 3);
+  color: #fff;
+}
+.customize-theme .choose-bg > div span {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--color-gray);
+  border-radius: 50%;
+  margin-right: 1rem;
+}
+
+.home .create.btn--main,
+.activities__header h2,
+.topics__list li a span,
+.roomListRoom__topic,
+.layout__boxHeader,
+.participants__top {
+  background: var(--theme-color);
 }

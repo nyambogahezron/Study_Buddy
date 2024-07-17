@@ -45,7 +45,14 @@
             {% endif %}
 
             <div class="dropdown-menu">
-                <a href="{% url 'update-user' %}" class="dropdown-link"><svg version="1.1"
+                <a href="{% url 'update-user' %}" class="dropdown-link"><svg xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22H4ZM12 13C8.685 13 6 10.315 6 7C6 3.685 8.685 1 12 1C15.315 1 18 3.685 18 7C18 10.315 15.315 13 12 13Z">
+                        </path>
+                    </svg>
+                    Profile</a>
+                <a href="{% url 'settings' %}" class="dropdown-link"><svg version="1.1"
                         xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
                         <title>tools</title>
                         <path
@@ -68,12 +75,3 @@
         </nav>
     </div>
 </header>
-
-
-
-<!-- {% if request.user.is_authenticated %}
-<p>Hello {{request.user}}</p>
-<a href="{% url 'logout' %}">Logout</a>
-{% else %}
-<a href="{% url 'login' %}">Login</a>
-{% endif %} -->

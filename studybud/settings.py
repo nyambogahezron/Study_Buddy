@@ -14,9 +14,11 @@ SECRET_KEY = 'django-insecure-2rrn#rgve^4+t=h0+0g=bn!!7nxpyx8*=k=$20q6p+n=bduf8v
 
 DEBUG = True
 
-ALLOWED_HOSTS = [
-   'study-buddy-otky.onrender.com'
-]
+ALLOWED_HOSTS = [ ]
+
+# ALLOWED_HOSTS = [
+#    'study-buddy-otky.onrender.com'
+# ]
 
 
 # Application definition

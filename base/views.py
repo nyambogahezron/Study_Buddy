@@ -201,3 +201,8 @@ def activityPage(request):
     room_messages = Messages.objects.all()
     return render(request, 'base/activity.html', {'room_messages': room_messages})
 
+
+
+def settingsPage(request):
+    return render(request, 'base/settings.html')
+
