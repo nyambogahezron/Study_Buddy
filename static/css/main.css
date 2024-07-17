@@ -637,7 +637,7 @@ a {
   padding: 1rem;
   border-radius: 3px;
   width: 100%;
-  color: var(--color-light);
+  color: var(--color-bg-dark);
   font-weight: 500;
   outline: none;
 }
