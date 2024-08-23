@@ -19,10 +19,11 @@ def loginPage(request):
         password = request.POST.get('password')
         try:
             user = User.objects.get(email=email)
-        except:
+        except User.DoesNotExist:
             messages.error(request, "User does not exist")
+            return render(request, 'base/login_register.html', {"page": page})
 
-        user = authenticate(request, email=email  , password=password)
+        user = authenticate(request, email=email, password=password)
 
         if user is not None:
             login(request, user)
@@ -30,7 +31,7 @@ def loginPage(request):
         else:
             messages.error(request, "Invalid details")
 
-    context = {"page":page}
+    context = {"page": page}
     return render(request, 'base/login_register.html', context)
 
 

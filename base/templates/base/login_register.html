@@ -2,8 +2,12 @@
 <main class="auth layout">
   {% if page == 'login' %}
   <div class="container">
+    {% include 'navbar.html' %}
+
+  
     <div class="layout__box">
       <div class="layout__boxHeader">
+
         <div class="layout__boxTitle">
           <h3>Login</h3>
         </div>
@@ -15,20 +19,16 @@
           {% csrf_token %}
           <div class="form__group form__group">
             <label for="room_name">Email</label>
-            <input id="username" name="email" type="email" />
+            <input id="username" name="email" type="text" />
           </div>
           <div class="form__group">
             <label for="password">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
-            />
+            <input id="password" name="password" type="password" minlength="8"
+              placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
           </div>
 
           <button class="btn btn--main" type="submit">
-          <i class="fa-solid fa-lock"></i>
+            <i class="fa-solid fa-lock"></i>
 
             Login
           </button>

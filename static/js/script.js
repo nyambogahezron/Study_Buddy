@@ -89,3 +89,29 @@ colorButtons.forEach((button) => {
 // On page load, get the color from local storage and set it in the HTML root.
 let color = localStorage.getItem('color') || 'color-1';
 document.documentElement.classList.add(color);
+
+
+function showAlert(message) {
+  const alertContainer = document.getElementById('alert-container');
+  const alert = document.createElement('div');
+  alert.className = 'alert';
+  alert.innerText = message;
+
+  alertContainer.appendChild(alert);
+
+  // Show the alert with animation
+  setTimeout(() => {
+    alert.classList.add('show');
+  }, 10);
+
+  // Hide the alert after 3 seconds
+  setTimeout(() => {
+    alert.classList.remove('show');
+    alert.classList.add('hide');
+  }, 3000);
+
+  // Remove the alert from the DOM after the hide animation
+  setTimeout(() => {
+    alertContainer.removeChild(alert);
+  }, 3500);
+}

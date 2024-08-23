@@ -9,17 +9,31 @@
   <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="{% static 'css/main.css' %}" />
   <title>StudyBuddy - Find study partners around the world!</title>
+  <link rel="stylesheet" href="https://unpkg.com/@mui/material@5.16.7/umd/material-ui.development.js" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-ui/4.11.0/material-ui.min.css">
 
 </head>
 
 <body>
-  {% include 'navbar.html' %} {% if messages %}
-  <ul class="messages">
+  {% include 'navbar.html' %}
+
+  {% if messages %}
+  <ul class="messages " id="alert-container">
     {% for message in messages %}
-    <li>{{ message }}</li>
+    <li>
+      <div class="alert">
+        {{ message }}
+        <script>
+          alert({ message })
+        </script>
+      </div>
+    </li>
     {% endfor %}
   </ul>
-  {% endif %} {% block content %} {% endblock %}
+  {% endif %}
+
+
+  {% block content %} {% endblock %}
 
   <script src="{% static 'js/script.js' %}"></script>
 </body>

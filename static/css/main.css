@@ -476,6 +476,11 @@ a {
 .dropdown-button:hover svg {
   fill: var(--color-dark);
 }
+.not-logged-nav {
+  display: flex;
+  gap: 20px;
+  margin-right: 20px;
+}
 
 /* main css  */
 
@@ -754,6 +759,10 @@ a {
   justify-content: center;
   width: 100%;
   margin-top: 5px;
+}
+
+.auth .layout__box {
+  margin-top: 35rem;
 }
 
 @media screen and (max-width: 500px) {
@@ -1407,6 +1416,7 @@ a {
   display: flex;
   width: 100vw;
   max-width: 1200px;
+  margin: 0 auto;
   height: 100vh;
   position: relative;
   text-align: center;
@@ -1538,4 +1548,36 @@ a {
 .layout__boxHeader,
 .participants__top {
   background: var(--theme-color);
+}
+
+/* // alert css */
+
+#alert-container {
+  position: relative;
+  top: 80px;
+  width: 40%;
+  z-index: 1000;
+  margin: 0 auto;
+  padding: 10px 20px;
+}
+
+.alert {
+  background-color: #f44336;
+  color: white;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.alert.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.alert.hide {
+  opacity: 0;
+  transform: translateX(100%);
 }
