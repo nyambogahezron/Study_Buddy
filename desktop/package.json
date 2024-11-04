@@ -1,0 +1,26 @@
+{
+  "name": "study-buddy",
+  "version": "1.0.0",
+  "description": "study-buddy desktop application",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nyambogahezron/Study_Buddy.git"
+  },
+  "keywords": [
+    "study-buddy"
+  ],
+  "author": "Hezron Nyamboga",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nyambogahezron/Study_Buddy/issues"
+  },
+  "homepage": "https://github.com/nyambogahezron/Study_Buddy#readme",
+  "devDependencies": {
+    "electron": "^33.0.2"
+  }
+}

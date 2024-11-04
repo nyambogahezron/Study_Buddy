@@ -72,7 +72,7 @@ def home(request):
 
     return render(request, 'base/home.html', {'rooms': rooms, 'topics':topics, 'room_count': room_count, 'room_messages': room_messages})
 
-
+@login_required(login_url='login')
 def room(request, pk):
     room = Room.objects.get(id=pk)
     room_messages = room.messages_set.all().order_by('-created')
