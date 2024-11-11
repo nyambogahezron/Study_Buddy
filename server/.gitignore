@@ -11,3 +11,4 @@ eggs/
 parts/
 var/
 env/
+db.sqlite3
