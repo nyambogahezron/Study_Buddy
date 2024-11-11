@@ -10,9 +10,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Rest Framework settings
-REST_FRAMEWORK = {}
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -22,9 +19,25 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework_simplejwt",
     "rest_framework",
     "api",
 ]
+
+# Rest Framework settings
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}
+
+SIMPLE_JWT = {
+    "AUTH_COOKIE": "access_token",  
+    "AUTH_COOKIE_SECURE": False,  
+    "AUTH_COOKIE_HTTP_ONLY": True, 
+    "AUTH_COOKIE_PATH": "/",  
+    "AUTH_COOKIE_SAMESITE": "Lax", 
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
