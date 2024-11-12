@@ -1,70 +1,50 @@
+# React + TypeScript + Vite
 
-# StudyBuddy
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-StudyBuddy is a web application built with Django that helps students connect, collaborate, and study together. This README provides an overview of the project, setup instructions, and usage guidelines.
+Currently, two official plugins are available:
 
-## Features
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-- User authentication and profiles
-- Create and join study groups
-- Schedule study sessions
-- Share resources and notes
-- Real-time chat
+## Expanding the ESLint configuration
 
-## Installation
+If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/yourusername/StudyBuddy.git
-    ```
-2. Navigate to the project directory:
-    ```bash
-    cd StudyBuddy
-    ```
-3. Create a virtual environment:
-    ```bash
-    python3 -m venv venv
-    ```
-4. Activate the virtual environment:
-    - On Windows:
-        ```bash
-        venv\Scripts\activate
-        ```
-    - On macOS/Linux:
-        ```bash
-        source venv/bin/activate
-        ```
-5. Install the required dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-6. Apply the migrations:
-    ```bash
-    python manage.py migrate
-    ```
-7. Create a superuser:
-    ```bash
-    python manage.py createsuperuser
-    ```
-8. Run the development server:
-    ```bash
-    python manage.py runserver
-    ```
+- Configure the top-level `parserOptions` property like this:
 
-## Usage
+```js
+export default tseslint.config({
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
 
-1. Open your web browser and go to `http://127.0.0.1:8000/`.
-2. Register a new account or log in with your superuser credentials.
-3. Explore the features and start collaborating with other students.
+- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
+- Optionally add `...tseslint.configs.stylisticTypeChecked`
+- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
 
-## Contributing
+```js
+// eslint.config.js
+import react from 'eslint-plugin-react'
 
-Contributions are welcome! Please fork the repository and create a pull request with your changes. Make sure to follow the project's coding standards and include tests for any new features or bug fixes.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
-## Contact
-
-For any questions or suggestions, please open an issue or contact the project maintainer at your.email@example.com.
+export default tseslint.config({
+  // Set the react version
+  settings: { react: { version: '18.3' } },
+  plugins: {
+    // Add the react plugin
+    react,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended rules
+    ...react.configs.recommended.rules,
+    ...react.configs['jsx-runtime'].rules,
+  },
+})
+```
