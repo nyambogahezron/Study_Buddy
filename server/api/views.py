@@ -16,8 +16,11 @@ from .serializers import (
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.tokens import UntypedToken
 from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
+from rest_framework.permissions import IsAuthenticated
+from .permissions import AuthenticateUser, IsOwnerOrRoom, CustomIsAuthenticated
 
 
+######## authenticate user views  #######
 class LoginPageView(APIView):
     def post(self, request):
         email = request.data.get("email")
@@ -49,41 +52,13 @@ class LoginPageView(APIView):
             )
 
 
-class ShowCurrentUser(APIView):
-    def get(self, request):
-        token = request.COOKIES.get("access_token")
-        if not token:
-            return Response(
-                {"error": "No token provided"}, status=status.HTTP_401_UNAUTHORIZED
-            )
-
-        try:
-            # Verify the token and get the payload
-            payload = UntypedToken(token)
-            user_id = payload.get("user_id")
-            if not user_id:
-                return Response(
-                    {"error": "Invalid token payload"},
-                    status=status.HTTP_401_UNAUTHORIZED,
-                )
-
-            # Get the user from the database
-            user = User.objects.get(id=user_id)
-            return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
-
-        except (InvalidToken, TokenError) as e:
-            return Response(
-                {"error": "Unauthenticated"}, status=status.HTTP_401_UNAUTHORIZED
-            )
-
-
 class LogoutUserView(APIView):
     def post(self, request):
         logout(request)
-        response = Response()
+        response = Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
         response.delete_cookie("access_token")
         response.delete_cookie("refresh_token")
-        return Response({"message": "Logout successful"}, status=status.HTTP_200_OK)
+        return response
 
 
 class RegisterUserView(APIView):
@@ -110,6 +85,81 @@ class RegisterUserView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class UserProfileView(APIView):
+    def get(self, request, pk):
+        try:
+            user = User.objects.get(id=pk)
+        except User.DoesNotExist:
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        rooms = user.room_set.all()
+        room_messages = user.messages_set.all()
+        topics = Topic.objects.all()
+        data = {
+            "user": UserSerializer(user).data,
+            "rooms": RoomSerializer(rooms, many=True).data,
+            "room_messages": MessageSerializer(room_messages, many=True).data,
+            "topics": TopicSerializer(topics, many=True).data,
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+
+######## authenticate user views  #######
+class ShowCurrentUser(APIView):
+    def get(self, request):
+        token = request.COOKIES.get("access_token")
+        if not token:
+            return Response(
+                {"error": "Unauthorized access, no token"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        try:
+            # Verify the token and get the payload
+            payload = UntypedToken(token)
+            user_id = payload.get("user_id")
+            if not user_id:
+                return Response(
+                    {"error": "Unauthorized access,invalid token"},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
+            # Get the user from the database
+            user = User.objects.get(id=user_id)
+            return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+
+        except (InvalidToken, TokenError) as e:
+            return Response(
+                {"error": "Invalid Token"}, status=status.HTTP_401_UNAUTHORIZED
+            )
+
+
+class UpdateUserView(APIView):
+    def patch(self, request):
+        try:
+            res = ShowCurrentUser().get(request)
+            if res.status_code != 200:
+                return Response(
+                    {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+                )
+
+            user = User.objects.get(id=res.data["id"])
+        except User.DoesNotExist:
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "User updated"}, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+######## Rooms view  #######
 class HomeView(APIView):
     def get(self, request):
         q = request.GET.get("q") if request.GET.get("q") else ""
@@ -151,27 +201,37 @@ class RoomView(APIView):
         return Response({"message": "Message created"}, status=status.HTTP_201_CREATED)
 
 
-class UserProfileView(APIView):
-    def get(self, request, pk):
-        user = User.objects.get(id=pk)
-        rooms = user.room_set.all()
-        room_messages = user.messages_set.all()
-        topics = Topic.objects.all()
-        data = {
-            "user": UserSerializer(user).data,
-            "rooms": RoomSerializer(rooms, many=True).data,
-            "room_messages": MessageSerializer(room_messages, many=True).data,
-            "topics": TopicSerializer(topics, many=True).data,
-        }
-        return Response(data, status=status.HTTP_200_OK)
+class GetAllRoomsView(APIView):
+    def get(self, request):
+        rooms = Room.objects.all()
+        serializer = RoomSerializer(rooms, many=True)
+        return Response(
+            {"rooms": serializer.data, "count": rooms.count()},
+            status=status.HTTP_200_OK,
+        )
 
 
 class CreateRoomView(APIView):
     def post(self, request):
         topic_name = request.data.get("topic")
         topic, created = Topic.objects.get_or_create(name=topic_name)
+
+        try:
+            user = AuthenticateUser().is_authenticated(request)
+            user_id = user.get("id")
+            host = user_id
+        except Exception as e:
+            return Response(
+                {"error": "Unauthorized access"}, status=status.HTTP_403_FORBIDDEN
+            )
+
+        if not host:
+            return Response(
+                {"error": "Unauthorized access"}, status=status.HTTP_403_FORBIDDEN
+            )
+
         room_data = {
-            "host": request.user.id,
+            "host": host,
             "topic": topic.id,
             "name": request.data.get("name"),
             "description": request.data.get("description"),
@@ -179,15 +239,31 @@ class CreateRoomView(APIView):
         serializer = RoomSerializer(data=room_data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Room created"}, status=status.HTTP_201_CREATED)
+            return Response(
+                {"message": "Room created", "data": serializer.data},
+                status=status.HTTP_201_CREATED,
+            )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UpdateRoomView(APIView):
-    def post(self, request, pk):
+    def patch(self, request, pk):
         room = Room.objects.get(id=pk)
-        if request.user != room.host:
+        try:
+            user = AuthenticateUser().is_authenticated(request)
+            user_id = user.get("email")
+        except Exception as e:
+            return Response(
+                {"error": "Unauthorized access"}, status=status.HTTP_403_FORBIDDEN
+            )
+
+        if not user:
+            return Response(
+                {"error": "Unauthorized access"}, status=status.HTTP_403_FORBIDDEN
+            )
+
+        if user_id != room.host.email:
             return Response(
                 {"error": "You are not allowed here"}, status=status.HTTP_403_FORBIDDEN
             )
@@ -202,15 +278,40 @@ class UpdateRoomView(APIView):
         serializer = RoomSerializer(room, data=room_data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({"message": "Room updated"}, status=status.HTTP_200_OK)
+            return Response(
+                {"message": "Room updated", "dat": serializer.data},
+                status=status.HTTP_200_OK,
+            )
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DeleteRoomView(APIView):
-    def post(self, request, pk):
-        room = Room.objects.get(id=pk)
-        if request.user != room.host:
+    permission_classes = [CustomIsAuthenticated, IsOwnerOrRoom]
+
+    def delete(self, request, pk):
+        try:
+            room = Room.objects.get(id=pk)
+        except Room.DoesNotExist:
+            return Response(
+                {"error": "Room not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        user = AuthenticateUser().is_authenticated(request)
+        if not user:
+            return Response(
+                {"error": "Unauthorized access"}, status=status.HTTP_403_FORBIDDEN
+            )
+
+        try:
+            user_id = user.get("id")
+            room_id = room.host.id
+        except Exception as e:
+            return Response(
+                {"error": "Unauthorized access"}, status=status.HTTP_403_FORBIDDEN
+            )
+
+        if user_id != room_id:
             return Response(
                 {"error": "You are not allowed here"}, status=status.HTTP_403_FORBIDDEN
             )
@@ -219,27 +320,92 @@ class DeleteRoomView(APIView):
         return Response({"message": "Room deleted"}, status=status.HTTP_200_OK)
 
 
-class DeleteMessageView(APIView):
+class SendMessageView(APIView):
+    permission_classes = [CustomIsAuthenticated]
+
     def post(self, request, pk):
-        message = Messages.objects.get(id=pk)
-        if request.user != message.user:
+        res = ShowCurrentUser().get(request)
+        if res.status_code != 200:
             return Response(
-                {"error": "You are not allowed here"}, status=status.HTTP_403_FORBIDDEN
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        user_data = res.data
+        user = User.objects.get(id=user_data["id"])
+        try:
+            room = Room.objects.get(id=pk)
+        except Room.DoesNotExist:
+            return Response(
+                {"error": "Room not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        message = Messages.objects.create(
+            user=user, room=room, body=request.data.get("body")
+        )
+
+        room.participants.add(request.user)
+        return Response({"message": "Message created"}, status=status.HTTP_201_CREATED)
+
+
+class MessageActionsView(APIView):
+    permission_classes = [CustomIsAuthenticated]
+
+    # update message
+
+    def patch(self, request, pk):
+        try:
+            message = Messages.objects.get(id=pk)
+
+        except Messages.DoesNotExist:
+            return Response(
+                {"error": "Message not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+        res = ShowCurrentUser().get(request)
+        if res.status_code != 200:
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        user = User.objects.get(id=res.data["id"])
+
+        if user != message.user:
+            return Response(
+                {"error": "Unauthorized action"}, status=status.HTTP_403_FORBIDDEN
+            )
+
+        serializer = MessageSerializer(message, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "Message updated", "data": serializer.data},
+                status=status.HTTP_200_OK,
+            )
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # delete message
+    def delete(self, request, pk):
+        try:
+            message = Messages.objects.get(id=pk)
+        except Messages.DoesNotExist:
+            return Response(
+                {"error": "Message not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+        res = ShowCurrentUser().get(request)
+        if res.status_code != 200:
+            return Response(
+                {"error": "User not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        user = User.objects.get(id=res.data["id"])
+
+        if user != message.user:
+            return Response(
+                {"error": "Unauthorized action"}, status=status.HTTP_403_FORBIDDEN
             )
 
         message.delete()
         return Response({"message": "Message deleted"}, status=status.HTTP_200_OK)
-
-
-class UpdateUserView(APIView):
-    def post(self, request):
-        user = request.user
-        serializer = UserSerializer(user, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "User updated"}, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TopicsPageView(APIView):
@@ -257,13 +423,3 @@ class ActivityPageView(APIView):
         return Response(
             MessageSerializer(room_messages, many=True).data, status=status.HTTP_200_OK
         )
-
-
-class ItemListCreateView(generics.ListCreateAPIView):
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer
-
-
-class ItemDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Item.objects.all()
-    serializer_class = ItemSerializer

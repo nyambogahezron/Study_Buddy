@@ -1,4 +1,5 @@
 from pathlib import Path
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -7,7 +8,7 @@ SECRET_KEY = "django-insecure-4_vza8&s8@eltnjn5+rc04ra11*z4$*5xgi0s$pv_-*wiml(rr
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "http://localhost:5173"]
 
 
 # Application definition
@@ -32,11 +33,12 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "AUTH_COOKIE": "access_token",  
-    "AUTH_COOKIE_SECURE": False,  
-    "AUTH_COOKIE_HTTP_ONLY": True, 
-    "AUTH_COOKIE_PATH": "/",  
-    "AUTH_COOKIE_SAMESITE": "Lax", 
+    "AUTH_COOKIE": "access_token",
+    "AUTH_COOKIE_SECURE": False,
+    "AUTH_COOKIE_HTTP_ONLY": True,
+    "AUTH_COOKIE_PATH": "/",
+    "AUTH_COOKIE_SAMESITE": "Lax",
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
 }
 
 MIDDLEWARE = [

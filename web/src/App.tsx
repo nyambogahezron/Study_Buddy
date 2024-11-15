@@ -1,9 +1,12 @@
-import Home from './pages/Home';
+import MainLayout from './Layouts/mainLayout';
+import { Outlet } from 'react-router-dom';
 
 export default function App() {
   return (
     <>
-      <Home />
+      <MainLayout>
+        <Outlet />
+      </MainLayout>
     </>
   );
 }

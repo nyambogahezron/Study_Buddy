@@ -518,9 +518,8 @@ a {
     right: 1.5rem;
   }
   .layout--3 > .container > div:nth-child(2) {
-  flex-basis: 47%;
-}
-
+    flex-basis: 47%;
+  }
 }
 
 .layout--2 > .container > div:first-child {
@@ -637,7 +636,9 @@ a {
   border-color: var(--color-main);
   color: var(--color-bg-dark);
 }
-
+.form__group input {
+   color: var(--color-bg-dark);
+}
 .form__group textarea {
   background: transparent;
   height: 10rem;
