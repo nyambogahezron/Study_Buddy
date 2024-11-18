@@ -8,7 +8,7 @@ SECRET_KEY = "django-insecure-4_vza8&s8@eltnjn5+rc04ra11*z4$*5xgi0s$pv_-*wiml(rr
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "http://localhost:5173"]
+ALLOWED_HOSTS = ["http://localhost:5173", "127.0.0.1"]
 
 
 # Application definition
@@ -42,6 +42,7 @@ SIMPLE_JWT = {
 }
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -51,7 +52,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "studyBuddyApi.urls"
+ROOT_URLCONF = "app.urls"
 
 TEMPLATES = [
     {
@@ -69,7 +70,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "studyBuddyApi.wsgi.application"
+WSGI_APPLICATION = "app.wsgi.application"
 
 
 DATABASES = {

@@ -10,5 +10,5 @@ build/
 eggs/
 parts/
 var/
-env/
+venv/
 db.sqlite3
