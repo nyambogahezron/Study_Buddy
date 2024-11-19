@@ -8,7 +8,7 @@ SECRET_KEY = "django-insecure-4_vza8&s8@eltnjn5+rc04ra11*z4$*5xgi0s$pv_-*wiml(rr
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://localhost:5173", "127.0.0.1"]
+ALLOWED_HOSTS = ["http://localhost:5173", "127.0.0.1", "study-buddy-otky.onrender.com"]
 
 
 # Application definition
