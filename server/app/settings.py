@@ -21,8 +21,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework_simplejwt",
-    "rest_framework",
+    "rest_framework",  # for API
     "api",
+    # for API documentation
+    "drf_yasg",
 ]
 
 # Rest Framework settings
@@ -41,8 +43,10 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
 }
 
+
+
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # allow cross-origin requests
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -114,4 +118,4 @@ STATIC_URL = "static/"
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = "api.User"
+AUTH_USER_MODEL = "api.User"  # custom user model

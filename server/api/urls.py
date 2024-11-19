@@ -1,3 +1,8 @@
+import os
+import yaml
+from django.urls import path
+from drf_yasg import openapi
+from drf_yasg.views import get_schema_view
 from django.urls import path
 from .views import (
     HomeView,
@@ -18,6 +23,20 @@ from .views import (
     MessageActionsView,
 )
 
+
+# Load YAML file
+with open(os.path.join(os.path.dirname(__file__), "docs.yaml"), "r") as file:
+    schema_dict = yaml.safe_load(file)
+
+# Create SchemaView from YAML
+schema_view = get_schema_view(
+    openapi.Info(
+        title=schema_dict["info"]["title"],
+        default_version=schema_dict["info"]["version"],
+        description=schema_dict["info"]["description"],
+    ),
+    public=True,
+)
 
 urlpatterns = [
     # auth routes
@@ -43,4 +62,11 @@ urlpatterns = [
     path("activity/", ActivityPageView.as_view(), name="activity"),
     # other route
     path("", HomeView.as_view(), name="home"),
+    # documentation routes
+    path(
+        "swagger/",
+        schema_view.with_ui("swagger", cache_timeout=0),
+        name="schema-swagger-ui",
+    ),
+    path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
 ]

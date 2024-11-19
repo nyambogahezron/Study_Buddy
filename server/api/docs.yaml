@@ -1,0 +1,331 @@
+openapi: 3.0.3
+info:
+  title: Study-Buddy-Api
+  description: >-
+    # 🚀 API Docs For Study-Buddy
+
+  version: 1.0.0
+  contact: {}
+servers:
+  - url: '{{base-uri}}login'
+  - url: '{{base-uri}}register'
+  - url: '{{base-uri}}logout'
+  - url: '{{base-uri}}rooms'
+  - url: '{{base-uri}}room'
+  - url: '{{base-uri}}current_user'
+  - url: '{{base-uri}}user'
+  - url: '{{base-uri}}profile'
+  - url: '{{base-uri}}'
+  - url: '{{base-uri}}message'
+  - url: '{{base-uri}}topics'
+  - url: '{{base-uri}}activity'
+paths:
+  /:
+    get:
+      summary: Get All Rooms
+      description: >-
+        This is a POST request, submitting data to an API via the request body.
+        This request submits JSON data, and the data is reflected in the
+        response.
+
+
+        A successful POST request typically returns a `200 OK` or `201 Created`
+        response code.
+      operationId: getAllRooms
+      responses:
+        '200':
+          description: ''
+    post:
+      summary: Login User
+      description: >-
+        This is a GET request and it is used to "get" data from an endpoint.
+        There is no request body for a GET request, but you can use query
+        parameters to help specify the resource you want data on (e.g., in this
+        request, we have `id=1`).
+
+
+        A successful GET response will have a `200 OK` status, and should
+        include some kind of response body - for example, HTML web content or
+        JSON data.
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bio:
+                  type: string
+                  example: A short bio about John Doe.
+                email:
+                  type: string
+                  example: john2@gmail.com
+                name:
+                  type: string
+                  example: John Doe
+                password:
+                  type: string
+                  example: user12345678#
+                username:
+                  type: string
+                  example: john2
+            examples:
+              Login User:
+                value:
+                  email: john2@gmail.com
+                  password: user12345678#
+              Register user:
+                value:
+                  bio: A short bio about John Doe.
+                  email: john2@gmail.com
+                  name: John Doe
+                  password: user12345678#
+                  username: john2
+      responses:
+        '200':
+          description: ''
+  /8:
+    get:
+      summary: Get  Room Data
+      description: >-
+        This is a POST request, submitting data to an API via the request body.
+        This request submits JSON data, and the data is reflected in the
+        response.
+
+
+        A successful POST request typically returns a `200 OK` or `201 Created`
+        response code.
+      operationId: getRoomData
+      responses:
+        '200':
+          description: ''
+  /create/:
+    post:
+      summary: Create Room
+      description: >-
+        This is a POST request, submitting data to an API via the request body.
+        This request submits JSON data, and the data is reflected in the
+        response.
+
+
+        A successful POST request typically returns a `200 OK` or `201 Created`
+        response code.
+      operationId: createRoom
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: js dev group
+                name:
+                  type: string
+                  example: js dev
+                topic:
+                  type: string
+                  example: ts
+            examples:
+              Create Room:
+                value:
+                  description: js dev group
+                  name: js dev
+                  topic: ts
+      responses:
+        '200':
+          description: ''
+  /update/6/:
+    patch:
+      summary: Update Room
+      description: >-
+        This is a POST request, submitting data to an API via the request body.
+        This request submits JSON data, and the data is reflected in the
+        response.
+
+
+        A successful POST request typically returns a `200 OK` or `201 Created`
+        response code.
+      operationId: updateRoom
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: js dev group
+                name:
+                  type: string
+                  example: js dev for 2025
+                topic:
+                  type: string
+                  example: js dev
+            examples:
+              Update Room:
+                value:
+                  description: js dev group
+                  name: js dev for 2025
+                  topic: js dev
+      responses:
+        '200':
+          description: ''
+  /delete/9/:
+    delete:
+      summary: Delete  Room
+      description: >-
+        This is a POST request, submitting data to an API via the request body.
+        This request submits JSON data, and the data is reflected in the
+        response.
+
+
+        A successful POST request typically returns a `200 OK` or `201 Created`
+        response code.
+      operationId: deleteRoom
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                  example: js dev group
+                name:
+                  type: string
+                  example: js dev for 2025
+                topic:
+                  type: string
+                  example: js dev
+            examples:
+              Delete  Room:
+                value:
+                  description: js dev group
+                  name: js dev for 2025
+                  topic: js dev
+      responses:
+        '200':
+          description: ''
+  /update/:
+    patch:
+      summary: Update data
+      description: >-
+        This is a PUT request and it is used to overwrite an existing piece of
+        data. For instance, after you create an entity with a POST request, you
+        may want to modify that later. You can do that using a PUT request. You
+        typically identify the entity being updated by including an identifier
+        in the URL (eg. `id=1`).
+
+
+        A successful PUT request typically returns a `200 OK`, `201 Created`, or
+        `204 No Content` response code.
+      operationId: updateData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bio:
+                  type: string
+                  example: I love js dev
+                email:
+                  type: string
+                  example: john2@gmail.com
+                first_name:
+                  type: string
+                  example: John
+                id:
+                  type: number
+                  example: 2
+                last_name:
+                  type: string
+                  example: Doe
+                name:
+                  type: string
+                  example: John Doe
+            examples:
+              Update data:
+                value:
+                  bio: I love js dev
+                  email: john2@gmail.com
+                  first_name: John
+                  id: 2
+                  last_name: Doe
+                  name: John Doe
+      responses:
+        '200':
+          description: ''
+  /3:
+    get:
+      summary: Get User profile
+      description: >-
+        This is a DELETE request, and it is used to delete data that was
+        previously created via a POST request. You typically identify the entity
+        being updated by including an identifier in the URL (eg. `id=1`).
+
+
+        A successful DELETE request typically returns a `200 OK`, `202
+        Accepted`, or `204 No Content` response code.
+      operationId: getUserProfile
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Get User profile:
+                value: ''
+      responses:
+        '200':
+          description: ''
+  /send/8/:
+    post:
+      summary: Send Message
+      description: Send Message
+      operationId: sendMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  example: 'Hello '
+            examples:
+              Send Message:
+                value:
+                  body: 'Hello '
+      responses:
+        '200':
+          description: ''
+  /5/:
+    patch:
+      summary: Update Message
+      description: Update Message
+      operationId: updateMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  type: string
+                  example: This id a msg
+            examples:
+              Update Message:
+                value:
+                  body: This id a msg
+      responses:
+        '200':
+          description: ''
+  /4/:
+    delete:
+      summary: Update Message Copy
+      description: Update Message Copy
+      operationId: updateMessageCopy
+      responses:
+        '200':
+          description: ''
+tags: []
