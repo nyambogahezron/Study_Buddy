@@ -8,7 +8,10 @@ SECRET_KEY = "django-insecure-4_vza8&s8@eltnjn5+rc04ra11*z4$*5xgi0s$pv_-*wiml(rr
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["http://localhost:5173", "127.0.0.1", "study-buddy-otky.onrender.com"]
+ALLOWED_HOSTS = [
+    "study-buddy-otky.onrender.com",
+    "127.0.0.1",
+]
 
 
 # Application definition
@@ -25,13 +28,15 @@ INSTALLED_APPS = [
     "api",
     # for API documentation
     "drf_yasg",
+    "corsheaders",  # allow cross-origin requests
 ]
 
 # Rest Framework settings
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-    )
+    ),
+    "EXCEPTION_HANDLER": "api.exceptions.custom_exception_handler",
 }
 
 SIMPLE_JWT = {
@@ -42,8 +47,11 @@ SIMPLE_JWT = {
     "AUTH_COOKIE_SAMESITE": "Lax",
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
 }
-
-
+CORS_ALLOWED_ORIGINS = [
+    "https://study-buddy-otky.onrender.com",
+    "http://localhost:5173",
+]
+CORS_ALLOW_CREDENTIALS = True  # allow cookies to be sent with requests
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",  # allow cross-origin requests

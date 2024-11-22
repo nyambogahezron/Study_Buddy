@@ -20,6 +20,19 @@ class UserSerializer(serializers.ModelSerializer):
         fields = "__all__"
         extra_kwargs = {"password": {"write_only": True}}
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        # Add additional custom processing for the response if needed
+        return response
+
+    def validate(self, data):
+        # Example: Custom validation logic
+        if data.get("field_name") == "invalid_value":
+            raise serializers.ValidationError(
+                {"field_name": "This value is not allowed."}
+            )
+        return data
+
     # hash password
     def create(self, validated_data):
         password = validated_data.pop("password", None)

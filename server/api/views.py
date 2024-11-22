@@ -69,7 +69,7 @@ class RegisterUserView(APIView):
         )
         if user.exists():
             return Response(
-                {"error": "Invalid credentials"},
+                {"error": "Invalid username or email"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -82,7 +82,10 @@ class RegisterUserView(APIView):
                 {"message": "Registration successful"}, status=status.HTTP_201_CREATED
             )
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            errors = [error[0] for error in serializer.errors.values()]
+            return Response(
+                {"error": " ".join(errors)}, status=status.HTTP_400_BAD_REQUEST
+            )
 
 
 class UserProfileView(APIView):
